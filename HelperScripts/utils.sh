@@ -85,9 +85,13 @@ function checkVersion() {
     local tool="$1"
     local minVersion="$2"
     # Make sure ${tool} is installed
-    if [[ "${tool}" -eq "gatk" ]]; then
+    if [[ "${tool}" = "gatk" ]]; then
         GATK_JAR=$(checkGATK ${GATK_JAR})
-        "${tool}" --version > /dev/null 2>&1
+        if [[ ${GATK_JAR} == *"GenomeAnalysisTK.jar"* ]]; then
+            java -jar ${GATK_JAR} --help > /dev/null 2>&1
+        else
+            "${tool}" --help > /dev/null 2>&1
+        fi
         retVal=$?
     else
         "${tool}" --version > /dev/null 2>&1
