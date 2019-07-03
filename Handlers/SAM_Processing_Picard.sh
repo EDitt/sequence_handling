@@ -25,8 +25,9 @@ function SAM_Processing(){
     local platform="$4" # What platform were our samples sequenced on?
     local maxMem="$5" # What is the most amount of memory that we can use?
     local maxFiles="$6" # What is the maximum number of file handles that we can use?
-    local tmp="$7" # Where is the temp directory?
-    local project="$8" # What is the name of the project?
+    local project="$7" # What is the name of the project?
+    local tmp="$8" # Where is the temp directory?
+    #   Order of project and tmp switched, so it works when TMP is empty
     local sampleName=$(basename "${SAMFile}" .sam)
     #   Make the out directories
     makeOutDirectories "${outDirectory}"
@@ -105,7 +106,7 @@ function SAM_Processing(){
     local percent_singleton=$(grep "%" "${outDirectory}/Statistics/Finished_BAM_Stats/${sampleName}_finished.txt" | tail -n 1 | cut -f 2 -d "(" | cut -f 1 -d " ")
     local num_split_chr=$(tail -n 2 "${outDirectory}/Statistics/Finished_BAM_Stats/${sampleName}_finished.txt" | head -n 1 | cut -f 1 -d " ")
     local percent_split_chr=$(echo "${num_split_chr}/${num_reads}" | bc -l)
-    echo -e "${sampleName}\t${num_reads}\t${percent_mapped}\t${percent_paired}\t${percent_singleton}\t${percent_split_chr}" >> "${outDirectory}/Statistics/${project}_mapping_summary.txt"
+    echo -e "${sampleName}\t${num_reads}\t${percent_mapped}\t${percent_paired}\t${percent_singleton}\t${percent_split_chr}" >> "${outDirectory}/Statistics/${project}_mapping_summary.tsv"
     #   Index the finished BAM file
     samtools index "${outDirectory}/${sampleName}.bam"
     #   Rename the index file
