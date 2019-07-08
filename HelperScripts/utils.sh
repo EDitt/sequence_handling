@@ -88,7 +88,8 @@ function checkVersion() {
     if [[ "${tool}" == "gatk" ]]; then
         GATK_JAR=$(checkGATK ${GATK_JAR})
         if [[ ${GATK_JAR} == *"GenomeAnalysisTK.jar"* ]]; then
-            java -jar ${GATK_JAR} --help > /dev/null 2>&1
+            java -jar ${GATK_JAR} --version > /dev/null 2>&1
+            #java -jar ${GATK_JAR} --help > /dev/null 2>&1
         else
             "${tool}" --help > /dev/null 2>&1
         fi
@@ -111,7 +112,8 @@ function checkVersion() {
         # GATK3 uses "GenomeAnalysisTK.jar" file while in GATK4, this jar file naming no longer exists
         if [[ ${GATK_JAR} == *"GenomeAnalysisTK.jar"* ]]
         then
-            installedVer=$(java -jar ${GATK_JAR} -h | sed -n 2p | cut -d 'v' -f 2 | cut -d '-' -f 1)
+            installedVer=$(java -jar ${GATK_JAR} --version | cut -d'-' -f 1)
+            #installedVer=$(java -jar ${GATK_JAR} -h | sed -n 2p | cut -d 'v' -f 2 | cut -d '-' -f 1)
         else
             installedVer=$(basename $(find $(dirname ${GATK_JAR}) -name "*spark.jar" | cut -d '-' -f 5))
         fi
