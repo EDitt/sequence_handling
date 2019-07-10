@@ -89,9 +89,9 @@ function checkVersion() {
         GATK_JAR=$(checkGATK ${GATK_JAR})
         if [[ ${GATK_JAR} == *"GenomeAnalysisTK.jar"* ]]; then
             java -jar ${GATK_JAR} --version > /dev/null 2>&1
-            #java -jar ${GATK_JAR} --help > /dev/null 2>&1
         else
-            "${tool}" --help > /dev/null 2>&1
+            "${tool}" --version > /dev/null 2>&1
+            #"${tool}" --help > /dev/null 2>&1 ###This was used in v. 4.0.x because version flag not supported (but is in 4.1.x)
         fi
         retVal=$?
     else
@@ -113,9 +113,9 @@ function checkVersion() {
         if [[ ${GATK_JAR} == *"GenomeAnalysisTK.jar"* ]]
         then
             installedVer=$(java -jar ${GATK_JAR} --version | cut -d'-' -f 1)
-            #installedVer=$(java -jar ${GATK_JAR} -h | sed -n 2p | cut -d 'v' -f 2 | cut -d '-' -f 1)
         else
-            installedVer=$(basename $(find $(dirname ${GATK_JAR}) -name "*spark.jar" | cut -d '-' -f 5))
+            installedVer=$(${GATK_JAR} --version | grep "Genome Analysis Toolkit" | grep -Eo '[0-9]+[\.0-9]*')
+            #installedVer=$(basename $(find $(dirname ${GATK_JAR}) -name "*spark.jar" | cut -d '-' -f 5)) ###This was used in v. 4.0.x because version flag not supported (but is in 4.1.x)
         fi
     else
 	    echo "ERROR: checkVersion() in utils.sh doesn't know how to check the version of ${tool}"
